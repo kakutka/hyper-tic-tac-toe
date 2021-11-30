@@ -1,5 +1,9 @@
 # модуль визуализации самой игры
-
+import pygame
+pygame.init()
+pygame.font.init()
+color = {'BLUE':(4, 217, 255), 'PINK':(254, 1, 154), 'GREEN':(57, 255, 20), 'WHITE':(255, 255, 255), 'BLACK':(0, 0, 0)}
+text = pygame.font.Font(None, 36)
 def draw_field():
     '''рисует поле 9 на 9 и рядом с ним маленькое 3 на 3.
 Также рисует кнопку "правила" и удаляет старые рисунки
@@ -7,33 +11,40 @@ def draw_field():
 большое поле в центре, маленькое справа от него и на расстоянии 30 от его конца'''
     pass
 
-def draw_zero(mas):
+def draw_zero(screen, mas):
     '''рисует нолик с центром в заданных координатах.
 переменная mas - кортеж координат. размер нолика 26*26'''
-    pass
+    pygame.draw.circle(screen, color['GREEN'], mas, 13)
+    #fff
 
-def draw_cross(mas):
+def draw_cross(screen, mas):
     '''рисует крестик. размер крестика 26*26'''
-    pass
+    x0, y0 = mas[0]-13, mas[1]-13
+    x1, y1 = mas[0]+13, mas[1]+13
+    pygame.draw.line(screen, color['PINK'], (x0, y0), (x1, y1), 2)
+    x0, y0 = mas[0]-13, mas[1]+13
+    x1, y1 = mas[0]+13, mas[1]-13
+    pygame.draw.line(screen, color['PINK'], (x0, y0), (x1, y1), 2)
+    #fff
 
-def draw_mass0():
+def draw_mass0(screen):
     for j in range(9):
             for i in range(9):
                 if mass0[j][i]:
                     mas = mass0_in_mas(j, i)
                     if mass0[j][i] == 1:
-                        draw_cross(mas)
+                        draw_cross(screen, mas)
                     else:
-                        draw_zero(mas)
+                        draw_zero(screen, mas)
 
-def draw_mass1():
+def draw_mass1(screen):
     for i in range(9):
             if mass1[i]:
                 mas = mass1_in_mas(i)
                 if mass1[i] == 1:
-                    draw_cross(mas)
+                    draw_cross(screen, mas)
                 else:
-                    draw_zero(mas)
+                    draw_zero(screen, mas)
 
 def draw_line0():
     '''рисует красные линии в тех квадратах, в которых кто-то выиграл,

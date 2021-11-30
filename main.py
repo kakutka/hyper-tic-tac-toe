@@ -8,21 +8,34 @@ from model_two_person import *
 from play_vis import *
 from text import *
 pygame.init()
+pygame.font.init()
+color = {'BLUE':(4, 217, 255), 'PINK':(254, 1, 154), 'GREEN':(57, 255, 20), 'WHITE':(255, 255, 255), 'BLACK':(0, 0, 0)}
+text = pygame.font.Font(None, 36)
+##
 
+# надо написать правила игры
+
+pobeda_cross_text = text.render('Победил первый игрок. Крестики торжествуют!', True, color['PINK'])
+pobeda_cross_text = text.render('Победил второй игрок. Нолики торжествуют!', True, color['PINK'])
+you_win_text = text.render('Поздравляю! Ты смог победить меня!', True, color['PINK'])
+you_lose_text = text.render('Как-нибудь в следующий раз тебе повезёт...', True, color['PINK'])
+play_person = 0
+your_play_text = text.render('Ваш ход. Вы ходите '+["крестиками" if not play_person else "ноликами"][0], True, color['GREEN'])
+##
 screen = pygame.display.set_mode((500, 500))
 clock = pygame.time.Clock()
 # color - set type from inter_vis
-play_box = [(),(),(),()]
-wall_box = [(),(),(),()]
-back_box = [(),(),(),()]
-play_one_box = [(),(),(),()]
-play_two_box = [(),(),(),()]
+play_box = [(200, 250),(300, 250),(300, 220),(200, 220)]
+wall_box = [(180, 330),(320, 330),(320, 300),(180, 300)]
+back_box = [(20, 50),(100, 50),(100, 20),(20, 20)]
+play_one_box = [(120, 250),(310, 250),(310, 220),(120, 220)]
+play_two_box = [(180, 330),(380, 330),(380, 300),(180, 300)]
 # переменные quit0, two, one принимают логические
 # значения и после завершения цикла определяют дальнейшее поведение программы
 quit0, two, one = 0, 0, 0
 flag = True
 while flag:
-    priv_enter()
+    priv_enter(screen)
     # def from inter_vis
     # draw priv on display
     pygame.display.flip()
@@ -38,7 +51,7 @@ while flag:
                 # проверяет попадание мышки по кнопке
                 flag1 = True
                 while flag1:
-                    play_enter()
+                    play_enter(screen)
                     # def from inter_vis
                     # draw play on display
                     pygame.display.flip()
@@ -53,12 +66,12 @@ while flag:
                             if prov_box(event.pos, play_one_box):
                                 one = True
                                 flag1 = False
-                                flag0 = False
+                                flag = False
                                 break
                             if prov_box(event.pos, play_two_box):
                                 two = True
                                 flag1 = False
-                                flag0 = False
+                                flag = False
                                 break
                             if prov_box(event.pos, back_box):
                                 flag1 = False
@@ -68,7 +81,7 @@ while flag:
             if prov_box(event.pos, wall_box):
                 flag1 = True
                 while flag1:
-                    wall_enter()
+                    wall_enter(screen)
                     # def from inter_vis
                     # draw display with wall
                     pygame.display.flip()
@@ -76,7 +89,7 @@ while flag:
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
                             quit0 = True
-                            flag0 = False
+                            flag = False
                             flag1 = False
                             break
                         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -101,11 +114,11 @@ if two:
     play_person = 0
     #счетчик определяет кто ходит: 0 - первый, 1 - второй
     while flag:
-        draw_field() # рисует поля и кнопки
-        draw_mass0() # заполняет поле 9*9
-        draw_mass1() # заполняет поле 3*3
-        draw_line0() # рисует линии в квадратах, где кто-то победил в поле 9*9
-        draw_play_person(play_person) # пишет над полем, чья очередь ходить
+        draw_field(screen) # рисует поля и кнопки
+        draw_mass0(screen) # заполняет поле 9*9
+        draw_mass1(screen) # заполняет поле 3*3
+        draw_line0(screen) # рисует линии в квадратах, где кто-то победил в поле 9*9
+        draw_play_person(screen, play_person) # пишет над полем, чья очередь ходить
         pygame.display.flip()
         clock.tick(30)
         for event in pygame.event.get():
