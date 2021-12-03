@@ -215,8 +215,10 @@ if one:
     # отрезков, которые обозначают, кто на каком поле выиграл
     pobeda_zero = 0
     pobeda_cross = 0 #позволяет в конце вывести на экран победителя
-    play_person = 0
-    s =-1
+    play_person = randint(0, 1)
+    s = -1
+    if play_person == 1:
+        mass0, s = bot_go(mass0, mass1, 1, (1, 4)) # нужно, чтобы возхвращал значение i для s
     #счетчик определяет кто ходит: 0 - первый, 1 - ход бота
     while flag:
         draw_field(screen) 
@@ -238,14 +240,21 @@ if one:
                 if prov_field(event.pos): 
                     mas = event_mas(event.pos)
                     j, i = mas_in_mass0(mas) # коорд клетки в массиве,
-                    # в которую нажали в игре
-                
-                    if play_person == 0:
-                        mass0[j][i] = 1
-                        mass0 = bot_go(mass0, mass1, 2, (j, i)) # бот ходит на поле 9*9 ноликами
-                    else:
-                        mass0[j][i] = 2
-                        mass0 = bot_go(mass0, mass1, 1, (j, i)) # бот ходит на поле 9*9 крестиками
+                    # в которую нажали в иuhb
+                    if s == -1:
+                        if play_person == 0:
+                            mass0[j][i] = 1
+                            mass0, s = bot_go(mass0, mass1, 2, (j, i)) # бот ходит на поле 9*9 ноликами
+                        else:
+                            mass0[j][i] = 2
+                            mass0, s = bot_go(mass0, mass1, 1, (j, i)) # бот ходит на поле 9*9 крестика
+                    if s == j:
+                        if play_person == 0:
+                            mass0[j][i] = 1
+                            mass0, s = bot_go(mass0, mass1, 2, (j, i)) # бот ходит на поле 9*9 ноликами
+                        else:
+                            mass0[j][i] = 2
+                            mass0, s = bot_go(mass0, mass1, 1, (j, i)) # бот ходит на поле 9*9 крестика
                 if prov_box(event.pos, wall_box1):
                     flag1 = True
                     while flag1:
@@ -266,10 +275,10 @@ if one:
                         break
         for j in range(9):
             if prov_line_zero(mass0[j]) and line0[j] == [(0,0),(0,0)]:
-                rest_line0(mass0, line0, j) 
+                line0[j] = rest_line0(mass0, line0, j) 
                 mass1[j] = 2
             if prov_line_cross(mass0[j]) and line0[j] == [(0,0),(0,0)]:
-                rest_line0(mass0, line0, j)
+                line0[j] = rest_line0(mass0, line0, j)
                 mass1[j] = 1
         if prov_line_zero(mass1):
             pobeda_zero = 1

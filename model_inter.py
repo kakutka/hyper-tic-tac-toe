@@ -10,9 +10,7 @@ box - массив 4-х координат. Функция возвращает 
     x3, y3 = box[2]
     x4, y4 = box[3]
     if x1 < x and x < x2 and y2 > y and y > y3:
-        print(True)
         return True
-    print(False)
     return False
     #функция написана полностью
 
