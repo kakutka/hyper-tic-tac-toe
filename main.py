@@ -204,11 +204,11 @@ if one:
     play_person = randint(0, 1)
     #счетчик определяет кто ходит: 0 - первый, 1 - ход бота
     while flag:
-        draw_field() 
-        draw_mass0() 
-        draw_mass1() 
-        draw_line0() 
-        draw_your_play(screen) # выводит на экран то, что надо ходить; и в зависимости от
+        draw_field(screen) 
+        draw_mass0(screen, mass0) 
+        draw_mass1(screen, mass1) 
+        draw_line0(screen, line0) 
+        draw_your_play(screen, play_person) # выводит на экран то, что надо ходить; и в зависимости от
         # play_person это будут или крестики или нолики 
         pygame.display.flip()
         clock.tick(30)
@@ -231,7 +231,7 @@ if one:
                 if prov_box(event.pos, wall_box):
                     flag1 = True
                     while flag1:
-                        wall_enter()
+                        wall_enter(screen)
                         pygame.display.flip()
                         clock.tick(30)
                         for event in pygame.event.get():
@@ -248,10 +248,10 @@ if one:
                         break
         for j in range(9):
             if prov_line_zero(mass0[j]) and line0[j] == [(0,0),(0,0)]:
-                rest_line0(j) 
+                rest_line0(mass0, line0, j) 
                 mass1[j] = 2
             if prov_line_cross(mass0[j]) and line0[j] == [(0,0),(0,0)]:
-                rest_line0(j)
+                rest_line0(mass0, line0, j)
                 mass1[j] = 1
         if prov_line_zero(mass1):
             pobeda_zero = 1
@@ -260,10 +260,10 @@ if one:
             pobeda_cross = 1
             break
     while flag: 
-        draw_field()
-        draw_mass0()
-        draw_mass1()
-        draw_line0()
+        draw_field(screen) 
+        draw_mass0(screen, mass0) 
+        draw_mass1(screen, mass1) 
+        draw_line0(screen, line0)
         if pobeda_zero:
             if play_person:
                 draw_you_win(screen) #говорит, что пользователь победил

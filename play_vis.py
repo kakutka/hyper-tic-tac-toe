@@ -122,7 +122,7 @@ def draw_you_lose(screen):
     screen.blit(you_lose_text, (55, 85))
     pass
 
-def draw_your_play(screen):
+def draw_your_play(screen, play_person):
     '''Выводит текст, в котором говорится, что надо ходить. И чем ходить.
 использует your_play_text'''
     your_play_text = text.render('Ваш ход. Вы ходите '+["крестиками" if not play_person else "ноликами"][0], True, color['WHITE'])
