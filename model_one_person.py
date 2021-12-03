@@ -4,84 +4,85 @@ def proverochka2(mass0, k, s):
     '''функция, проверяющая квадрат 3*3, куда отправили бота, на двойки элементов
 в ряд. сначала проверяет на двойки элементов, чем ходит бот, потом - на двойки
 элементов человека(чтобы заблокировать выигрышный ход)'''
-    m = s[1]# клетка поля 3*3 куда сходил человек. в поле 3*3 этого порядка должен ходить бот
+    s[1] = m # клетка поля 3*3 куда сходил человек. в поле 3*3 этого порядка должен ходить бот
     #t - клетка, куда ходит бот.
     # вычислим t
     a = mass0[m]
     for d in range(3): # 0,1,2
         if a[0+3*d] == a[1+3*d] == k:
             t = a[2+3*d]
-            return t
+            return (True, t)
         elif a[0+3*d] == a[2+3*d] == k:
             t = a[1+3*d]
-            return t
+            return (True, t)
         elif a[2+3*d] == a[1+3*d] == k:
             t = a[0+3*d]
-            return t#построчная проверка
+            return (True, t)#построчная проверка
         elif a[0+d] == a[3+d] == k:
             t = a[6+d]
-            return t
+            return (True, t)
         elif a[0+d] == a[6+d] == k:
             t = a[3+d]
-            return t
+            return (True, t)
         elif a[3+d] == a[6+d] == k:
             t = a[0+d]
-            return t#проверка столбцов
+            return (True, t)#проверка столбцов
         elif a[0] == a[4] == k:
             t = a[8]
-            return t
+            return (True, t)
         elif a[0] == a[8] == k:
             t = a[4]
-            return t
+            return (True, t)
         elif a[4] == a[8] == k:
             t = a[0]
-            return t
+            return (True, t)
         elif a[2] == a[4] == k:
             t = a[6]
-            return t
+            return (True, t)
         elif a[2] == a[6] == k:
             t = a[4]
-            return t
+            return (True, t)
         elif a[4] == a[6] == k:
             t = a[2]
-            return t# проверка диагоналей
+            return (True, t)# проверка диагоналей
         # в предыдущих строках проверялся элемент бота
         # теперь проверим на двойки элемента человека
         if a[0+3*d] == a[1+3*d] != k:
             t = a[2+3*d]
-            return t
+            return (True, t)
         elif a[0+3*d] == a[2+3*d] != k:
             t = a[1+3*d]
-            return t
+            return (True, t)
         elif a[2+3*d] == a[1+3*d] != k:
             t = a[0+3*d]
-            return t#построчная проверка
+            return (True, t)#построчная проверка
         elif a[0+d] == a[3+d] != k:
             t = a[6+d]
-            return t
+            return (True, t)
         elif a[0+d] == a[6+d] != k:
             t = a[3+d]
+            return (True, t)
         elif a[3+d] == a[6+d] != k:
             t = a[0+d]
-            return t#проверка столбцов
+            return (True, t)#проверка столбцов
         elif a[0] == a[4] != k:
             t = a[8]
-            return t
+            return (True, t)
         elif a[0] == a[8] != k:
             t = a[4]
-            return t
+            return (True, t)
         elif a[4] == a[8] != k:
             t = a[0]
-            return t
+            return (True, t)
         elif a[2] == a[4] != k:
             t = a[6]
-            return t
+            return (True, t)
         elif a[2] == a[6] != k:
             t = a[4]
-            return t
+            return (True, t)
         elif a[4] == a[6] != k:
             t = a[2]
-            return t
+            return (True, t)
 
 
 def vygrali(mass1, mass0):
@@ -92,7 +93,7 @@ def vygrali(mass1, mass0):
     for p in range(9):
         for q in range (9):
             if mass1[q] != 0 and mass0[q][p] == 0:
-                return q # возвращаем выигранное поле 3*3 со свободным местом
+                return (True, q) # возвращаем выигранное поле 3*3 со свободным местом
 
 def bot_go(mass0, mass1, k, s):
     '''в функцию подается массив - поле 9*9
@@ -105,24 +106,25 @@ def bot_go(mass0, mass1, k, s):
     '''чтобы лучше понять, как сделать эту функцию,
 надо, вероятно, ознакомиться со всей программой.
 Как-то так. кря-кря 128.'''
-# квадрат 3*3 поля 9*9 куда сходил человек
-    m = s[1]# клетка поля 3*3 куда сходил человек. в поле 3*3 этого порядка должен ходить бот
+    s[0] = l # квадрат 3*3 поля 9*9 куда сходил человек
+    s[1] = m # клетка поля 3*3 куда сходил человек. в поле 3*3 этого порядка должен ходить бот
     #t=mass0[m][x] - клетка, куда ходит бот.
     # вычислим t
     a = mass0[m]
-    if proverochka2(mass0, k, s): # мы проверили, есть ли возможность 3 в ряд
-        t = k
+    if proverochka2(mass0, k, s)[0]: # мы проверили, есть ли возможность 3 в ряд
+        proverochka2(mass0, k, s)[1] = k
+
  
-    elif vygrali(mass1, mass0):# проверили выигранные поля 3*3 со свободными местами
-        t = a[q] 
-        t = k
+    elif vygrali(mass1, mass0)[0]:# проверили выигранные поля 3*3 со свободными местами
+        vygrali(mass1, mass0)[1] = q
+        a[q]=k
 
     else : # надо отправить хоть куда-то на рандомное место квадрата, куда бота отправили
         for g in range(9):
             if a[g] == 0:
-                t = a[g]
+                a[g]=k
 
 
-    t = k # поставили то, чем ходит бот в вычисленную клетку
+# поставили то, чем ходит бот в вычисленную клетку
     return mass0 #отдали новый массив 9*9 обратно
     
