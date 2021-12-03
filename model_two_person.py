@@ -4,19 +4,19 @@ import numpy as np
 def prov_field(event):
     '''проверяет попадание в поле 9 на 9 при нажатии мыши
 можно использовать функцию prov_box()'''
-    
-    if x<65 and x>65+270 and y<115 and y>115+270:
-        return False
-    else:
+    x, y = event
+    if x>65 and x<65+270 and y>115 and y<115+270:
         return True
-            
-    
+    else:
+        return False
+    #ffff
 
 
 def event_mas(event):
     '''получает координаты положения
 мышки и преобразовывает их в координаты центра той
 клетки, куда попали. возврaщает новый кортеж mas'''
+    x, y = event
     if y<115+30:
          y = 115+15
     elif y < 115+60:
@@ -55,13 +55,12 @@ def event_mas(event):
     elif x < 65 + 270:
         x = 65 + 255
                 
-        mas = (x,y )
-        return mas    
+    mas = (x,y)
+    return mas
+    #ffff
+
    
-           
-
 def mas_in_mass0(mas):
-
     mass00 = [
         [(65+15,115+15),(65+45, 115+15),(65+75, 115+15),(65+15,  115+45), (65+45, 115+45),(65+75, 115+45),(65+15,  115+75), (65+45, 115+75),(65+75, 115+75)],
         [(65+105, 115+15),(65+135, 115+15),(65+165, 115+15),(65+105, 115+45),(65+135, 115+45),(65+165, 115+45),(65+105, 115+75),(65+135, 115+75),(65+165, 115+75)],
@@ -73,9 +72,11 @@ def mas_in_mass0(mas):
         [(65+105, 115+195),(65+135, 115+195),(65+165, 115+195),(65+105, 115+225),(65+135, 115+225),(65+165, 115+225),(65+105, 115+255),(65+135, 115+255),(65+165, 115+255)],
         [(65+195, 115+195),(65+225, 115+195),(65+255, 115+195),(65+195, 115+225),(65+225, 115+225),(65+255, 115+225),(65+195, 115+255),(65+225, 115+255),(65+255, 115+255)],
              ]
-j, i = np.where(mass00 == mas)
-return (j, i)
-'''преобразовывает
+    for j in range(9):
+        for i in range(9):
+            if mass00[j][i]==mas:
+                return (j, i)
+    '''преобразовывает
 координаты центра клетки в нужные значения
 строк и столбцов для массива и возвращает их.
 Массив состоит из 9 списков, которые в свою очередь
@@ -91,14 +92,15 @@ return (j, i)
    
 
 def mas_in_mass1(mas):
- '''то же самое, что и для mass0, но только для главной
-доски (главная доска/поле - это доска, на которой определяется, кто
-победит в партии). Тут правда одна координата.'''
-a = 365
-b = 205
-mass1 = [(a+15, b+15), (a+45, b+15), (a+75, b+15), (a+15, b+45), (a+45, b+45), (a+75, b+45), (a+15, b+75), (a+45, b+75), (a+75, b+75)]   
-j, i = np.where( mass1 == mas)
-return(j, i)
+    '''то же самое, что и для mass0, но только для главной
+    доски (главная доска/поле - это доска, на которой определяется, кто
+    победит в партии). Тут правда одна координата.'''
+    a = 365
+    b = 205
+    mass11 = [(a+15, b+15), (a+45, b+15), (a+75, b+15), (a+15, b+45), (a+45, b+45), (a+75, b+45), (a+15, b+75), (a+45, b+75), (a+75, b+75)]   
+    for j in range(9):
+        if mass11[j]==mas:
+            return j
 
 
 def mass0_in_mas(j, i):
@@ -115,15 +117,18 @@ def mass0_in_mas(j, i):
              ]
     mas = mass00[j][i]
     return mas
- '''напротив, переводит координаты в массиве в координаты центра клетки на поле'''
+    '''напротив, переводит координаты в массиве в координаты центра клетки на поле'''
+    #fffff
+
 
 def mass1_in_mas(i):
     a = 365
     b = 205
-    mass11=   [ (a+15, b+15), (a+45, b+15), (a+75, b+15), (a+15, b+45), (a+45, b+45), (a+75, b+45), (a+15, b+75), (a+45, b+75), (a+75, b+75)]
+    mass11=[(a+15,b+15),(a+45,b+15),(a+75, b+15),(a+15,b+45),(a+45,b+45),
+            (a+75,b+45),(a+15,b+75),(a+45,b+75),(a+75,b+75)]
     mas = mass11[i]
     return mas
-'''напротив, переводит координаты в массиве в
+    '''напротив, переводит координаты в массиве в
 координаты центра клетки на поле'''
 
 def prov_line_zero(coopl):
@@ -151,7 +156,7 @@ def prov_line_zero(coopl):
    
 
 def prov_line_cross(coopl):
-        '''проверяет, есть ли тройка крестиков
+    '''проверяет, есть ли тройка крестиков
 в переданном массиве. Если да, то возвращает True'''
     if coopl[0] == coopl[1] == coopl[2] == 1:
         return True
@@ -173,37 +178,34 @@ def prov_line_cross(coopl):
         return False
 
 
-def rest_line0(k):
-    for j in range(9):
-        coopl = mass0[j]
-        mass0_in_mas(j,0) = a
-        mass0_in_mas(j,1) = b
-        mass0_in_mas(j,2) = c
-        mass0_in_mas(j,3) = d
-        mass0_in_mas(j,4) = e
-        mass0_in_mas(j,5) = f
-        mass0_in_mas(j,6) = g
-        mass0_in_mas(j,7) = h
-        mass0_in_mas(j,8) = p
-        if coopl[0] == coopl[1] == coopl[2]:
-            line0[k] = [a, b]
-        elif coopl[3] == coopl[4] == coopl[5]:
-            line0[k] = [d,f]
-        elif coopl[6] == coopl[7] == coopl[8]:
-            line0[k] = [g,p]
-        elif coopl[0] == coopl[3] == coopl[6]:
-            line0[k] = [a,g]
-        elif coopl[1] == coopl[4] == coopl[7]:
-            line0[k] = [b,h]
-        elif coopl[2] == coopl[5] == coopl[8]:
-            line0[k] = [c,p]
-        elif coopl[0] == coopl[4] == coopl[8]:
-            line0[k] = [a,p]
-        elif coopl[2] == coopl[4] == coopl[6]:
-            line0[k] = [c,g]
-        else:
-            return False
-        return line0[k]
+def rest_line0(mass0, line0, k):
+    coopl = mass0[k]
+    a = mass0_in_mas(k,0)
+    b = mass0_in_mas(k,1)
+    c = mass0_in_mas(k,2) 
+    d = mass0_in_mas(k,3) 
+    e = mass0_in_mas(k,4) 
+    f = mass0_in_mas(k,5) 
+    g = mass0_in_mas(k,6) 
+    h = mass0_in_mas(k,7) 
+    p = mass0_in_mas(k,8)
+    if coopl[0] == coopl[1] == coopl[2] != 0:
+        line0[k] = [a, b]
+    elif coopl[3] == coopl[4] == coopl[5] != 0:
+        line0[k] = [d,f]
+    elif coopl[6] == coopl[7] == coopl[8] != 0:
+        line0[k] = [g,p]
+    elif coopl[0] == coopl[3] == coopl[6] != 0:
+        line0[k] = [a,g]
+    elif coopl[1] == coopl[4] == coopl[7] != 0:
+        line0[k] = [b,h]
+    elif coopl[2] == coopl[5] == coopl[8] != 0:
+        line0[k] = [c,p]
+    elif coopl[0] == coopl[4] == coopl[8] != 0:
+        line0[k] = [a,p]
+    elif coopl[2] == coopl[4] == coopl[6] != 0:
+        line0[k] = [c,g]
+    return line0[k]
 
         
     '''заполняет j массив массива line0 нужными координатами, которые
@@ -214,4 +216,4 @@ mass0_in_mas(j, i) и заполняет line0[j]=[(ghg)(nnng)]'''
 
 
     
-    pass
+    

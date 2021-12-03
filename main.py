@@ -1,6 +1,7 @@
 # основной файл запуска
 import pygame
 from random import randint
+import numpy as np
 from inter_vis import *
 from model_inter import *
 from model_one_person import *
@@ -15,12 +16,7 @@ text = pygame.font.Font(None, 36)
 
 # надо написать правила игры
 
-pobeda_cross_text = text.render('Победил первый игрок. Крестики торжествуют!', True, color['PINK'])
-pobeda_cross_text = text.render('Победил второй игрок. Нолики торжествуют!', True, color['PINK'])
-you_win_text = text.render('Поздравляю! Ты смог победить меня!', True, color['PINK'])
-you_lose_text = text.render('Как-нибудь в следующий раз тебе повезёт...', True, color['PINK'])
 play_person = 0
-your_play_text = text.render('Ваш ход. Вы ходите '+["крестиками" if not play_person else "ноликами"][0], True, color['GREEN'])
 ##
 screen = pygame.display.set_mode((500, 500))
 clock = pygame.time.Clock()
@@ -30,6 +26,7 @@ wall_box = [(180, 330),(320, 330),(320, 300),(180, 300)]
 back_box = [(20, 50),(100, 50),(100, 20),(20, 20)]
 play_one_box = [(120, 250),(310, 250),(310, 220),(120, 220)]
 play_two_box = [(180, 330),(380, 330),(380, 300),(180, 300)]
+wall_box1 = [(340, 50),(480, 50),(480, 20),(340, 20)]
 # переменные quit0, two, one принимают логические
 # значения и после завершения цикла определяют дальнейшее поведение программы
 quit0, two, one = 0, 0, 0
@@ -106,18 +103,19 @@ if two:
     quit0 = False
     flag = True # позволяет находиться в цикле, пока не потребуется завершить игру
     mass1 = [0 for i in range(9)] #главное поле 3*3
-    mass0 = [mass1 for i in range(9)] #поле 9*9
+    mass0 = [[0 for j in range(9)] for i in range(9)] #поле 9*9
     #крестику соотв 1, нолику - 2
     line0 = [[(0,0),(0,0)] for i in range(9)] # сюда вносятся координаты
     # отрезков, которые обозначают, кто на каком поле выиграл
-    pobeda_zero = pobeda_cross = 0 #позволяет в конце вывести на экран победителя
+    pobeda_zero = 0
+    pobeda_cross = 0 #позволяет в конце вывести на экран победителя
     play_person = 0
     #счетчик определяет кто ходит: 0 - первый, 1 - второй
     while flag:
         draw_field(screen) # рисует поля и кнопки
-        draw_mass0(screen) # заполняет поле 9*9
-        draw_mass1(screen) # заполняет поле 3*3
-        draw_line0(screen) # рисует линии в квадратах, где кто-то победил в поле 9*9
+        draw_mass0(screen, mass0) # заполняет поле 9*9
+        draw_mass1(screen, mass1) # заполняет поле 3*3
+        draw_line0(screen, line0) # рисует линии в квадратах, где кто-то победил в поле 9*9
         draw_play_person(screen, play_person) # пишет над полем, чья очередь ходить
         pygame.display.flip()
         clock.tick(30)
@@ -137,11 +135,11 @@ if two:
                     else:
                         mass0[j][i] = 2
                         play_person = 0
-                if prov_box(event.pos, wall_box): # запускает цикл, где монжо
+                if prov_box(event.pos, wall_box1): # запускает цикл, где монжо
                     #прочитать правила и потом вернуться к игре
                     flag1 = True
                     while flag1:
-                        wall_enter()
+                        wall_enter(screen)
                         # def from inter_vis
                         # draw display with wall
                         pygame.display.flip()
@@ -162,11 +160,11 @@ if two:
             # проверяет, есть ли в данном квадрате три
             #объекта в ряд и впервые ли это
             if prov_line_zero(mass0[j]) and line0[j] == [(0,0),(0,0)]:
-                rest_line0(j) #вычисляет необходимые
+                line0[j] = rest_line0(mass0, line0, j) #вычисляет необходимые
                 #коорд из mass0[j] и заполняет ими line0[j]
                 mass1[j] = 2
             if prov_line_cross(mass0[j]) and line0[j] == [(0,0),(0,0)]:
-                rest_line0(j)
+                line0[j] = rest_line0(mass0, line0, j)
                 mass1[j] = 1
         if prov_line_zero(mass1):# проверяет, есть ли в главном квадрате три нуля в ряд
             pobeda_zero = 1
@@ -175,14 +173,14 @@ if two:
             pobeda_cross = 1
             break
     while flag: # выводит надпись, какой игрок победил
-        draw_field()
-        draw_mass0()
-        draw_mass1()
-        draw_line0()
+        draw_field(screen) # рисует поля и кнопки
+        draw_mass0(screen, mass0) # заполняет поле 9*9
+        draw_mass1(screen, mass1) # заполняет поле 3*3
+        draw_line0(screen, line0)
         if pobeda_zero:
-            draw_pobeda_zero()
+            draw_pobeda_zero(screen)
         if pobeda_cross:
-            draw_pobeda_cross()
+            draw_pobeda_cross(screen)
         pygame.display.flip()
         clock.tick(30)
         for event in pygame.event.get():
@@ -195,8 +193,6 @@ if two:
     
 
 if one:
-    # Воистину! Предлагаю сие сделать Наиле. Хотя... Я сам.
-
     quit0 = False
     flag = True # позволяет находиться в цикле, пока не потребуется завершить игру
     mass1 = [0 for i in range(9)] #главное поле 3*3
@@ -212,7 +208,7 @@ if one:
         draw_mass0() 
         draw_mass1() 
         draw_line0() 
-        draw_your_play() # выводит на экран то, что надо ходить; и в зависимости от
+        draw_your_play(screen) # выводит на экран то, что надо ходить; и в зависимости от
         # play_person это будут или крестики или нолики 
         pygame.display.flip()
         clock.tick(30)
@@ -228,10 +224,10 @@ if one:
                     # в которую нажали в игре
                     if play_person == 0:
                         mass0[j][i] = 1
-                        mass0 = bot_go(mass0, 2) # бот ходит на поле 9*9 ноликами
+                        mass0 = bot_go(mass0, mass1, 2, (j, i)) # бот ходит на поле 9*9 ноликами
                     else:
                         mass0[j][i] = 2
-                        mass0 = bot_go(mass0, 1) # бот ходит на поле 9*9 крестиками
+                        mass0 = bot_go(mass0, mass1, 1, (j, i)) # бот ходит на поле 9*9 крестиками
                 if prov_box(event.pos, wall_box):
                     flag1 = True
                     while flag1:
@@ -270,14 +266,14 @@ if one:
         draw_line0()
         if pobeda_zero:
             if play_person:
-                draw_you_win() #говорит, что пользователь победил
+                draw_you_win(screen) #говорит, что пользователь победил
             else:
-                draw_you_lose() #проиграл
+                draw_you_lose(screen) #проиграл
         if pobeda_cross:
             if play_person:
-                draw_you_lose()
+                draw_you_lose(screen)
             else:
-                draw_you_win()
+                draw_you_win(screen)
         pygame.display.flip()
         clock.tick(30)
         for event in pygame.event.get():
