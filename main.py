@@ -228,7 +228,7 @@ if one:
                     else:
                         mass0[j][i] = 2
                         mass0 = bot_go(mass0, mass1, 1, (j, i)) # бот ходит на поле 9*9 крестиками
-                if prov_box(event.pos, wall_box):
+                if prov_box(event.pos, wall_box1):
                     flag1 = True
                     while flag1:
                         wall_enter(screen)
