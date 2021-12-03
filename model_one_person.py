@@ -89,8 +89,12 @@ def proverochka2(mass0, k, s):
         elif a[4] == a[6] != k and a[4]!=0 :
             mass0[m][2] = k
             r = 2
+<<<<<<< HEAD
         else:
             return (mass0, -10)
+=======
+
+>>>>>>> 8e2a2a8396d4e84bf8c48c9724bbc164c7f801b3
         return (mass0,r)
 
 
@@ -102,7 +106,12 @@ def vygrali(mass1, mass0, k):
     for j in range(9):
         for i in range (9):
             if mass1[i] != 0 and mass0[i][j] == 0:
+<<<<<<< HEAD
                 mass0[i][j] = k    
+=======
+                mass0[i][j] = k
+                
+>>>>>>> 8e2a2a8396d4e84bf8c48c9724bbc164c7f801b3
     return (mass0,j)
                     #возвращаем выигранное поле 3*3 со свободным местом
 
@@ -121,24 +130,45 @@ def bot_go(mass0, mass1, k, s):
     m = s[1]# клетка поля 3*3 куда сходил человек. в поле 3*3 этого порядка должен ходить бот
     #t=mass0[m][x] - клетка, куда ходит бот.
     # вычислим t
+<<<<<<< HEAD
     if proverochka2(mass0, k, s)[0] != mass0: # мы проверили, есть ли возможность 3 в ряд
         s = proverochka2(mass0, k, s)
+=======
+    a = mass0[m]
+    if proverochka2(mass0, k, s) != mass0: # мы проверили, есть ли возможность 3 в ряд
+         mass0 = proverochka2(mass0, k, s)[0]
+         a = proverochka2(mass0, k, s)[1]
+>>>>>>> 8e2a2a8396d4e84bf8c48c9724bbc164c7f801b3
          
          
 
  
+<<<<<<< HEAD
     elif vygrali(mass1, mass0, k)[0] != mass0:# проверили выигранные поля 3*3 со свободными местами
         s = vygrali(mass1, mass0, k)
+=======
+    elif vygrali(mass1, mass0, k) != mass0:# проверили выигранные поля 3*3 со свободными местами
+        mass0 = vygrali(mass1, mass0, k)[0]
+        a = vygrali(mass1, mass0, k)[1]
+>>>>>>> 8e2a2a8396d4e84bf8c48c9724bbc164c7f801b3
 
     else : # надо отправить хоть куда-то на рандомное место квадрата, куда бота отправили
         for g in range(9):
             if mass0[m][g] == 0:
                 mass0[m][g]=k
                 a = g
+<<<<<<< HEAD
                 return(mass0,g)
 
 
 # поставили то, чем ходит бот в вычисленную клетку
     return s #отдали новый массив 9*9 обратно
+=======
+                return (mass0,g)
+
+
+# поставили то, чем ходит бот в вычисленную клетку
+    return (mass0,a) #отдали новый массив 9*9 обратно
+>>>>>>> 8e2a2a8396d4e84bf8c48c9724bbc164c7f801b3
     
 
