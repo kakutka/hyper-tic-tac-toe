@@ -26,8 +26,8 @@ def draw_field(screen):
         y1 = y + 30*i
         pygame.draw.line(screen, color['BLUE'], (x, y1),(x2, y1))
         if i == 3 or i == 6:
-            pygame.draw.line(screen, color['PINK'], (x1, y),(x1, y2))
-            pygame.draw.line(screen, color['PINK'], (x, y1),(x2, y1))
+            pygame.draw.line(screen, (255, 0, 0), (x1, y),(x1, y2))
+            pygame.draw.line(screen, (255, 0, 0), (x, y1),(x2, y1))
     x, y = 365, 205
     x2, y2 = 365+90, 205+90
     for i in range(4):
@@ -36,6 +36,35 @@ def draw_field(screen):
         y1 = y + 30*i
         pygame.draw.line(screen, color['BLUE'], (x, y1),(x2, y1))
     #ffff
+
+def draw_s(screen, s):
+    x, y = 65, 115
+    s += 1
+    if s == 1:
+        pass
+    if s == 2:
+        x += 90
+    if s == 3:
+        x += 180
+    if s == 4:
+        y+=90
+    if s==5:
+        x+=90
+        y+=90
+    if s==6:
+        x+=180
+        y+=90
+    if s==7:
+        y+=180
+    if s==8:
+        x+=90
+        y+=180
+    if s==9:
+        x+=180
+        y+=180
+    a = [(x, y), (x + 90, y), (x+90,y+90), (x, y+90)]
+    pygame.draw.polygon(screen, (225, 225, 225), a, 3)
+
 
 def draw_zero(screen, mas):
     '''рисует нолик с центром в заданных координатах.

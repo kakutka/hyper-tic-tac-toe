@@ -110,6 +110,7 @@ if two:
     pobeda_zero = 0
     pobeda_cross = 0 #позволяет в конце вывести на экран победителя
     play_person = 0
+    s = -1 # высвечивает квадрат, в который надо ходить
     #счетчик определяет кто ходит: 0 - первый, 1 - второй
     while flag:
         draw_field(screen) # рисует поля и кнопки
@@ -117,6 +118,8 @@ if two:
         draw_mass1(screen, mass1) # заполняет поле 3*3
         draw_line0(screen, line0) # рисует линии в квадратах, где кто-то победил в поле 9*9
         draw_play_person(screen, play_person) # пишет над полем, чья очередь ходить
+        if s != -1:
+            draw_s(screen, s)
         pygame.display.flip()
         clock.tick(30)
         for event in pygame.event.get():
@@ -129,12 +132,22 @@ if two:
                     mas = event_mas(event.pos)
                     j, i = mas_in_mass0(mas) # коорд клетки в массиве,
                     # в которую нажали в игре
-                    if play_person == 0:
-                        mass0[j][i] = 1
-                        play_person = 1
-                    else:
-                        mass0[j][i] = 2
-                        play_person = 0
+                    if s == -1:
+                        if play_person == 0:
+                            mass0[j][i] = 1
+                            play_person = 1
+                        else:
+                            mass0[j][i] = 2
+                            play_person = 0
+                        s = i
+                    elif s == j:
+                        if play_person == 0:
+                            mass0[j][i] = 1
+                            play_person = 1
+                        else:
+                            mass0[j][i] = 2
+                            play_person = 0
+                        s = i
                 if prov_box(event.pos, wall_box1): # запускает цикл, где монжо
                     #прочитать правила и потом вернуться к игре
                     flag1 = True
@@ -196,18 +209,22 @@ if one:
     quit0 = False
     flag = True # позволяет находиться в цикле, пока не потребуется завершить игру
     mass1 = [0 for i in range(9)] #главное поле 3*3
-    mass0 = [mass1 for i in range(9)] #поле 9*9
+    mass0 = [[0 for i in range(9)] for i in range(9)] #поле 9*9
     #крестику соотв 1, нолику - 2
     line0 = [[(0,0),(0,0)] for i in range(9)] # сюда вносятся координаты
     # отрезков, которые обозначают, кто на каком поле выиграл
-    pobeda_zero = pobeda_cross = 0 #позволяет в конце вывести на экран победителя
-    play_person = randint(0, 1)
+    pobeda_zero = 0
+    pobeda_cross = 0 #позволяет в конце вывести на экран победителя
+    play_person = 0
+    s =-1
     #счетчик определяет кто ходит: 0 - первый, 1 - ход бота
     while flag:
         draw_field(screen) 
         draw_mass0(screen, mass0) 
         draw_mass1(screen, mass1) 
-        draw_line0(screen, line0) 
+        draw_line0(screen, line0)
+        if s != -1:
+            draw_s(screen, s)
         draw_your_play(screen, play_person) # выводит на экран то, что надо ходить; и в зависимости от
         # play_person это будут или крестики или нолики 
         pygame.display.flip()
@@ -222,6 +239,7 @@ if one:
                     mas = event_mas(event.pos)
                     j, i = mas_in_mass0(mas) # коорд клетки в массиве,
                     # в которую нажали в игре
+                
                     if play_person == 0:
                         mass0[j][i] = 1
                         mass0 = bot_go(mass0, mass1, 2, (j, i)) # бот ходит на поле 9*9 ноликами
