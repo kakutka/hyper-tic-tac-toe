@@ -11,61 +11,87 @@ def proverochka2(mass0, k, s):
     for d in range(3): # 0,1,2
         if a[0+3*d] == a[1+3*d] == k:
             mass0[m][2+3*d] = k
+            r = 2+3*d
         elif a[0+3*d] == a[2+3*d] == k:
             mass0[m][1+3*d] = k
+            r = 1+3*d
         elif a[2+3*d] == a[1+3*d] == k:
-            mass0[m][0+3*d] =k#string prov
+            mass0[m][0+3*d] =k
+            r = 0+3*d#string prov
         elif a[0+d] == a[3+d] == k:
             mass0[m][6+d] = k
+            r = 6+d
         elif a[0+d] == a[6+d] == k:
             mass0[m][3+d] = k
+            r = 3+d
         elif a[3+d] == a[6+d] == k:
             mass0[m][0+d] = k
+            r = 0+d
             #проверка столбцов
         elif a[0] == a[4] == k:
             mass0[m][8] = k
+            r = 8
             
         elif a[0] == a[8] == k:
             mass0[m][4] = k
+            r = 4
         elif a[4] == a[8] == k:
             mass0[m][0]=k
+            r = 0
         elif a[2] == a[4] == k:
             mass0[m][6] = k
+            r = 6
         elif a[2] == a[6] == k:
             mass0[m][4] = k
+            r = 4
         elif a[4] == a[6] == k:
             mass0[m][2] = k
+            r = 2
         # проверка диагоналей
         # в предыдущих строках проверялся элемент бота
         # теперь проверим на двойки элемента человека
         if a[0+3*d] == a[1+3*d] != k and a[0+3*d]!=0 :
             mass0[m][2+3*d] = k
+            r = 2 + 3*d
         elif a[0+3*d] == a[2+3*d] != k and a[0+3*d]!=0 :
             mass0[m][1+3*d] = k
+            r = 1 +3*d
         elif a[2+3*d] == a[1+3*d] != k and a[2+3*d]!=0 :
-            mass0[m][0+3*d] =k#string prov
+            mass0[m][0+3*d] =k
+            r = 0+3*d#string prov
         elif a[0+d] == a[3+d] != k and a[0+d]!=0 :
             mass0[m][6+d] = k
+            r = 6 +d
         elif a[0+d] == a[6+d] != k and a[0+d]!=0 :
             mass0[m][3+d] = k
+            r = 3+d
         elif a[3+d] == a[6+d] != k and a[3+d]!=0 :
             mass0[m][0+d] = k
+            r = 0+d
             #проверка столбцов
         elif a[0] == a[4] != k and a[0]!=0 :
             mass0[m][8] = k
+            r = 8
+        
             
         elif a[0] == a[8] != k and a[0]!=0 :
             mass0[m][4] = k
+            r = 4
         elif a[4] == a[8] != k and a[4]!=0 :
             mass0[m][0]=k
+            r = 0
         elif a[2] == a[4]  != k and a[2]!=0 :
             mass0[m][6] = k
+            r = 6
         elif a[2] == a[6] != k and a[2]!=0 :
             mass0[m][4] = k
+            r = 4
         elif a[4] == a[6] != k and a[4]!=0 :
             mass0[m][2] = k
-
-        return mass0
+            r = 2
+        else:
+            return (mass0, -10)
+        return (mass0,r)
 
 
 def vygrali(mass1, mass0, k):
@@ -76,8 +102,8 @@ def vygrali(mass1, mass0, k):
     for j in range(9):
         for i in range (9):
             if mass1[i] != 0 and mass0[i][j] == 0:
-                mass0[i][j] = k
-    return mass0
+                mass0[i][j] = k    
+    return (mass0,j)
                     #возвращаем выигранное поле 3*3 со свободным местом
 
 def bot_go(mass0, mass1, k, s):
@@ -95,22 +121,24 @@ def bot_go(mass0, mass1, k, s):
     m = s[1]# клетка поля 3*3 куда сходил человек. в поле 3*3 этого порядка должен ходить бот
     #t=mass0[m][x] - клетка, куда ходит бот.
     # вычислим t
-    a = mass0[m]
-    if proverochka2(mass0, k, s) != mass0: # мы проверили, есть ли возможность 3 в ряд
-         mass0 = proverochka2(mass0, k, s)
+    if proverochka2(mass0, k, s)[0] != mass0: # мы проверили, есть ли возможность 3 в ряд
+        s = proverochka2(mass0, k, s)
+         
          
 
  
-    elif vygrali(mass1, mass0, k) != mass0:# проверили выигранные поля 3*3 со свободными местами
-        mass0 = vygrali(mass1, mass0, k)
+    elif vygrali(mass1, mass0, k)[0] != mass0:# проверили выигранные поля 3*3 со свободными местами
+        s = vygrali(mass1, mass0, k)
 
     else : # надо отправить хоть куда-то на рандомное место квадрата, куда бота отправили
         for g in range(9):
             if mass0[m][g] == 0:
                 mass0[m][g]=k
-                return mass0
+                a = g
+                return(mass0,g)
 
 
 # поставили то, чем ходит бот в вычисленную клетку
-    return mass0 #отдали новый массив 9*9 обратно
+    return s #отдали новый массив 9*9 обратно
     
+
