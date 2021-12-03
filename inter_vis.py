@@ -11,7 +11,8 @@ play_text = text.render('играть', True, color['GREEN'])
 wall_text = text.render('правила', True, color['GREEN'])
 name_text = text.render('добро пожаловать в игру', True, color['WHITE'])
 name1_text = text.render('"гипер-крестики-нолики"', True, color['WHITE'])
-wall_long_text = 'туть правилаудут написаны чтобы дети читали их и слушали очень внимательно  а так всякую вигню нипшетдчь вьслыьлс овт мловат ьс лстмоврл лламгшврлст ьслотсмвос млопт ащташуо'
+wall_long_text = 'Твоя цель - победить в маленьком поле справа. Хочешь поставить в него свой символ? Сначала победи в соответствующем квадрате 3*3 на левой стороне: просто собери три  своих символа в ряд. И помни: это не обычные крестики-нолики. Ставить свой символ придётся в тот квадрат 3*3, куда тебя направит соперник(просто соотнеси квадраты с клетками маленького поля). Да прибудут с тобой удача и ум. . . . '
+
 back_text = text.render('назад', True, color['PINK'])
 play_one_text = text.render('играть с ботом', True, color['GREEN'])
 play_two_text = text.render('играть вдвоём', True, color['GREEN'])
@@ -74,7 +75,7 @@ def wall_enter(screen):
     pygame.draw.polygon(screen, (215, 215, 215), back_box)
     screen.blit(back_text, (back_box[3][0]+5, back_box[3][1]+5))
     a = ren(wall_long_text, 4)
-    x, y = 50, 150
+    x, y = 10, 130
     k = 0
     for c in a:
         k += 1
