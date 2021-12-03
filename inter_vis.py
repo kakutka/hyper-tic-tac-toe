@@ -50,19 +50,19 @@ def play_enter(screen):
     #функция написана
 
 def ren(text0, fize):
-        s = text0.split()
-        a = []
-        k = 0
-        b = ''
-        for i in s:
-            b += ' '+i
-            k += 1
-            if k == fize:
-                k = 0
-                c = text.render(b, True, color['BLUE'])
-                a.append(c)
-                b = ''
-        return a
+    s = text0.split()
+    a = []
+    k = 0
+    b = ''
+    for i in s:
+        b += ' '+i
+        k += 1
+        if k == fize:
+            k = 0
+            c = text.render(b, True, color['BLUE'])
+            a.append(c)
+            b = ''
+    return a
             
 
 
