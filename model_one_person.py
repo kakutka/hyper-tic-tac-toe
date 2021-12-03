@@ -1,110 +1,72 @@
 ## модель игры с ботом
 from random import randint
-def proverochka2(mass0, k, s):
-    '''функция, проверяющая квадрат 3*3, куда отправили бота, на двойки элементов
-в ряд. сначала проверяет на двойки элементов, чем ходит бот, потом - на двойки
-элементов человека(чтобы заблокировать выигрышный ход)'''
-    m = s[1]# клетка поля 3*3 куда сходил человек. в поле 3*3 этого порядка должен ходить бот
-    #t - клетка, куда ходит бот.
-    # вычислим t
-    a = mass0[m]
-    for d in range(3): # 0,1,2
-        if a[0+3*d] == a[1+3*d] == k:
-            mass0[m][2+3*d] = k
-            r = 2+3*d
-        elif a[0+3*d] == a[2+3*d] == k:
-            mass0[m][1+3*d] = k
-            r = 1+3*d
-        elif a[2+3*d] == a[1+3*d] == k:
-            mass0[m][0+3*d] =k
-            r = 0+3*d#string prov
-        elif a[0+d] == a[3+d] == k:
-            mass0[m][6+d] = k
-            r = 6+d
-        elif a[0+d] == a[6+d] == k:
-            mass0[m][3+d] = k
-            r = 3+d
-        elif a[3+d] == a[6+d] == k:
-            mass0[m][0+d] = k
-            r = 0+d
-            #проверка столбцов
-        elif a[0] == a[4] == k:
-            mass0[m][8] = k
-            r = 8
-        elif a[0] == a[8] == k:
-            mass0[m][4] = k
-            r = 4
-        elif a[4] == a[8] == k:
-            mass0[m][0]=k
-            r = 0
-        elif a[2] == a[4] == k:
-            mass0[m][6] = k
-            r = 6
-        elif a[2] == a[6] == k:
-            mass0[m][4] = k
-            r = 4
-        elif a[4] == a[6] == k:
-            mass0[m][2] = k
-            r = 2
-        # проверка диагоналей
-        # в предыдущих строках проверялся элемент бота
-        # теперь проверим на двойки элемента человека
-        elif a[0+3*d] == a[1+3*d] != k and a[0+3*d]!=0 :
-            mass0[m][2+3*d] = k
-            r = 2 + 3*d
-        elif a[0+3*d] == a[2+3*d] != k and a[0+3*d]!=0 :
-            mass0[m][1+3*d] = k
-            r = 1 +3*d
-        elif a[2+3*d] == a[1+3*d] != k and a[2+3*d]!=0 :
-            mass0[m][0+3*d] =k
-            r = 0+3*d#string prov
-        elif a[0+d] == a[3+d] != k and a[0+d]!=0 :
-            mass0[m][6+d] = k
-            r = 6 +d
-        elif a[0+d] == a[6+d] != k and a[0+d]!=0 :
-            mass0[m][3+d] = k
-            r = 3+d
-        elif a[3+d] == a[6+d] != k and a[3+d]!=0 :
-            mass0[m][0+d] = k
-            r = 0+d
-            #проверка столбцов
-        elif a[0] == a[4] != k and a[0]!=0 :
-            mass0[m][8] = k
-            r = 8  
-        elif a[0] == a[8] != k and a[0]!=0 :
-            mass0[m][4] = k
-            r = 4
-        elif a[4] == a[8] != k and a[4]!=0 :
-            mass0[m][0]=k
-            r = 0
-        elif a[2] == a[4]  != k and a[2]!=0 :
-            mass0[m][6] = k
-            r = 6
-        elif a[2] == a[6] != k and a[2]!=0 :
-            mass0[m][4] = k
-            r = 4
-        elif a[4] == a[6] != k and a[4]!=0 :
-            mass0[m][2] = k
-            r = 2
+from model_two_person import *
+
+
+def prov2bot(mass0, k, j):
+    if k == 1: #крестик
+        for i in range(9):
+            a = mass0[j][:]
+            if a[i] == 0:
+                a[i] = 1
+                if prov_line_cross(a):
+                    return(i)
+                a[i] = 2
+                if prov_line_zero(a):
+                    return(i)
+    if k == 2: #нолик
+        for i in range(9):
+            a = mass0[j][:]
+            if a[i] == 0:
+                a[i] = 2
+                if prov_line_zero(a):
+                    return(i)
+                a[i] = 1
+                if prov_line_cross(a):
+                    return(i)
+    return(17)
+
+
+def prov_glav_desk(mass0, mass1, j):
+    for i in range(9):
+        if mass1[i] != 0 and mass0[j][i] == 0:
+            return(i)
+    return(17)
+
+
+def heh(mass0, j):
+    b = 1
+    for i in range(9):
+        b *= mass0[j][i]
+    if b == 0:
+        return True
+    return False
+
+
+def random_hod(mass0, j):
+    i = randint(0, 8)
+    for _ in range(9):
+        if heh(mass0, j):
+            while mass0[j][i] != 0:
+                i = randint(0, 8)
+            return(j, i)
         else:
-            return (mass0, -10)
-        return (mass0,r)
+            j = (j+1)%9
+    return(j, i)
 
-
-def vygrali(mass1, mass0, k):
-    '''в функцию подаётся массив главного поля 3*3
-мы хотим определить, есть ли в какой-нибудь клетке хоть что- нибудь
-то есть в этой клетке уже выиграли "vygrali"
-массив большого поля нужен просто для проверки свободных клеток'''
-    for j in range(9):
-        for i in range (9):
-            if mass1[i] != 0 and mass0[i][j] == 0:
-                mass0[i][j] = k
-                return(mass0,j)
-    return(mass0, -10)
-                    #возвращаем выигранное поле 3*3 со свободным местом
 
 def bot_go(mass0, mass1, k, s):
+    j = s[1]
+    i = prov2bot(mass0, k, j)
+    
+    if i == 17:
+        i = prov_glav_desk(mass0, mass1, j)
+    if i == 17:
+        j, i = random_hod(mass0, j)
+    mass0[j][i] = k
+    if not heh(mass0, i):
+        i = -1
+    return(mass0, i)
     '''в функцию подается массив - поле 9*9
 и число к, которое дает понять, чем ходит бот.
 если к=1, то бот ходит крестиками
@@ -115,29 +77,12 @@ def bot_go(mass0, mass1, k, s):
     '''чтобы лучше понять, как сделать эту функцию,
 надо, вероятно, ознакомиться со всей программой.
 Как-то так. кря-кря 128.'''
-    # квадрат 3*3 поля 9*9 куда сходил человек
-    m = s[1]# клетка поля 3*3 куда сходил человек. в поле 3*3 этого порядка должен ходить бот
-    #t=mass0[m][x] - клетка, куда ходит бот.
-    # вычислим t
-    if proverochka2(mass0, k, s)[0] != mass0: # мы проверили, есть ли возможность 3 в ряд
-         ss = proverochka2(mass0, k, s)
-         
-         
-
- 
-    elif vygrali(mass1, mass0, k)[0] != mass0:# проверили выигранные поля 3*3 со свободными местами
-        ss = vygrali(mass1, mass0, k)
-
-    else : # надо отправить хоть куда-то на рандомное место квадрата, куда бота отправили
-        for g in range(9):
-            if mass0[m][g] == 0:
-                mass0[m][g]=k
-                a = g
-                return (mass0,g)
 
 
-# поставили то, чем ходит бот в вычисленную клетку
-    return ss #отдали новый массив 9*9 обратно
-    
 
 
+
+   
+
+
+        

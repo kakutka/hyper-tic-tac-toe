@@ -1,6 +1,5 @@
 # this is model for two players
 import pygame
-import numpy as np
 def prov_field(event):
     '''проверяет попадание в поле 9 на 9 при нажатии мыши
 можно использовать функцию prov_box()'''

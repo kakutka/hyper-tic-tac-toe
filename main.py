@@ -248,7 +248,7 @@ if one:
                         else:
                             mass0[j][i] = 2
                             mass0, s = bot_go(mass0, mass1, 1, (j, i)) # бот ходит на поле 9*9 крестика
-                    if s == j:
+                    elif s == j:
                         if play_person == 0:
                             mass0[j][i] = 1
                             mass0, s = bot_go(mass0, mass1, 2, (j, i)) # бот ходит на поле 9*9 ноликами
