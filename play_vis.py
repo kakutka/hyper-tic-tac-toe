@@ -140,21 +140,29 @@ def draw_pobeda_cross(screen):
 def draw_you_win(screen):
     '''пишет, что победил игрок, а бот проиграл. использует
 переменную you_win_text'''
-    you_win_text = text.render('Поздравляю! Ты смог победить меня!', True, color['WHITE'])
+    you_win_text = text.render('Поздравляю!', True, color['WHITE'])
+    screen.blit(you_win_text, (55, 55))
+    you_win_text = text.render('Ты смог победить меня!', True, color['WHITE'])
     screen.blit(you_win_text, (55, 85))
     pass
 
 def draw_you_lose(screen):
     '''пишет, что проиграл игрок, а бот победил. использует
 переменную you_lose_text'''
-    you_lose_text = text.render('Как-нибудь в следующий раз тебе повезёт...', True, color['WHITE'])
+    you_lose_text = text.render('Как-нибудь', True, color['WHITE'])
+    screen.blit(you_lose_text, (55, 25))
+    you_lose_text = text.render('в следующий раз', True, color['WHITE'])
+    screen.blit(you_lose_text, (55, 55))
+    you_lose_text = text.render('тебе повезёт...', True, color['WHITE'])
     screen.blit(you_lose_text, (55, 85))
     pass
 
 def draw_your_play(screen, play_person):
     '''Выводит текст, в котором говорится, что надо ходить. И чем ходить.
 использует your_play_text'''
-    your_play_text = text.render('Ваш ход. Вы ходите '+["крестиками" if not play_person else "ноликами"][0], True, color['WHITE'])
+    your_play_text = text.render('Ваш ход.', True, color['WHITE'])
+    screen.blit(your_play_text, (55, 55))
+    your_play_text = text.render('Вы ходите '+["крестиками" if not play_person else "ноликами"][0], True, color['WHITE'])
     screen.blit(your_play_text, (55, 85))
     pass
 
