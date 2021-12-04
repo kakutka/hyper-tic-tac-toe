@@ -189,7 +189,7 @@ def rest_line0(mass0, line0, k):
     h = mass0_in_mas(k,7) 
     p = mass0_in_mas(k,8)
     if coopl[0] == coopl[1] == coopl[2] != 0:
-        line0[k] = [a, b]
+        line0[k] = [a, c]
     elif coopl[3] == coopl[4] == coopl[5] != 0:
         line0[k] = [d,f]
     elif coopl[6] == coopl[7] == coopl[8] != 0:
